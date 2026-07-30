@@ -49,7 +49,7 @@ if (isset($_POST["login"])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>iRubber | Log in</title>
+  <title>iMaturing | Log in</title>
   
   <link rel="icon" href="assets/images/i.Phylon.png" type="image/x-icon">
   <!-- Google Font: Source Sans Pro -->
@@ -60,6 +60,41 @@ if (isset($_POST["login"])) {
   <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+
+  <style>
+
+  .login-background{
+      position: relative;
+      background: url('assets/images/login-bg.png') no-repeat center center fixed;
+      background-size: cover;
+  }
+
+  /* Overlay putih transparan */
+  .login-background::before{
+      content: "";
+      position: fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background: rgba(255,255,255,0.65); /* semakin besar semakin samar */
+      z-index:0;
+  }
+
+  /* Semua isi halaman berada di atas overlay */
+  .login-box{
+      position: relative;
+      z-index:2;
+  }
+
+  /* Card dibuat sedikit transparan */
+  .login-box .card{
+      background: rgba(255,255,255,0.92);
+      border-radius:15px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+
+  </style>
 </head>
 <!-- Error -->
 <?php if (isset($error)) :?>
@@ -71,14 +106,14 @@ if (isset($_POST["login"])) {
   <?php unset($error);?>
 <?php endif; ?>
 <!-- End Error -->
-<body class="hold-transition login-page">
+<body class="hold-transition login-page login-background">
 <div class="login-box">
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
      
  
     <div class="card-header text-center">
-      <a href="#" class="h1"><b>i</b>Phylon</a>
+      <a href="#" class="h1"><b>i</b>Maturing</a>
     </div>
     <div class="card-body">
       <p class="login-box-msg">Sign in to start your session</p>

@@ -7,197 +7,63 @@ if (!isset($_SESSION['login'])) {
     exit;
 }
 
-/*
-|--------------------------------------------------------------------------
-| SHIFT AKTIF
-|--------------------------------------------------------------------------
-*/
-
-$shiftNow = 1;
-
-$getShift = mysqli_query($conn,"
-    SELECT shift
-    FROM tbl_master_time
-    WHERE CURDATE() = date
-    AND CURTIME() BETWEEN time_start AND time_end
-    LIMIT 1
-");
-
-if(mysqli_num_rows($getShift) > 0)
-{
-    $shift = mysqli_fetch_assoc($getShift);
-    $shiftNow = $shift['shift'];
-}
-
-/* ===========================================================
-   FILTER DASHBOARD
-=========================================================== */
-
-$currentDate  = date('Y-m-d');
-$currentShift = $shiftNow;
-
-// Jika user memilih history
-$selectedDate  = $_GET['tanggal'] ?? $currentDate;
-$selectedShift = $_GET['shift'] ?? $currentShift;
-
-/*
-|--------------------------------------------------------------------------
-| DASHBOARD SUMMARY
-|--------------------------------------------------------------------------
-*/
-
-// Total Order
-$sqlOrder = mysqli_query($conn,"
-SELECT COALESCE(SUM(total_order),0) total
-FROM tbl_spk_detail
-");
-$totalOrder = mysqli_fetch_assoc($sqlOrder)['total'];
-
-// =========================
-// TOTAL PLANNING
-// =========================
-$sqlPlanning = mysqli_query($conn,"
-SELECT COALESCE(SUM(total_qty),0) AS total
-FROM tbl_spk_detail
-");
-
-$totalPlanning = mysqli_fetch_assoc($sqlPlanning)['total'];
-
-
-// Total Production (OUT_PACKING)
-$sqlProduction = mysqli_query($conn,"
-    SELECT COALESCE(SUM(CAST(mb.qty AS UNSIGNED)),0) AS total
-    FROM tbl_transaction_scan ts
-    INNER JOIN tbl_master_barcode mb
-        ON ts.qr_code = mb.qr_code
-    WHERE ts.type_scan = 'OUT_PACKING'
-");
-$totalProduction = mysqli_fetch_assoc($sqlProduction)['total'];
-
-
-// Total Stock Supermarket
-$sqlStockSM = mysqli_query($conn,"
-SELECT
-(
-    SELECT COALESCE(SUM(CAST(mb.qty AS UNSIGNED)),0)
-    FROM tbl_transaction_scan ts
-    INNER JOIN tbl_master_barcode mb
-        ON ts.qr_code = mb.qr_code
-    WHERE ts.type_scan='IN_SM'
-)
--
-(
-    SELECT COALESCE(SUM(CAST(mb.qty AS UNSIGNED)),0)
-    FROM tbl_transaction_scan ts
-    INNER JOIN tbl_master_barcode mb
-        ON ts.qr_code = mb.qr_code
-    WHERE ts.type_scan='OUT_SM'
-) AS total
-");
-$totalStockSM = mysqli_fetch_assoc($sqlStockSM)['total'];
-
-
-// Progress Production
-$remainingPlanning = $totalPlanning - $totalProduction;
-
-// Progress %
-$planningPercent = 0;
-$orderPercent = 0;
-$planningOrderPercent = 0;
-$stockSupermarketPercent = 0;
-$remainingPercent = 0;
-
-if($totalPlanning > 0){
-    $planningPercent = ($totalProduction / $totalPlanning) * 100;
-}
-
-if($totalOrder > 0){
-    $orderPercent = ($totalProduction / $totalOrder) * 100;
-
-    // Planning dibanding Order
-    $planningOrderPercent = ($totalPlanning / $totalOrder) * 100;
-}
-
-if($totalPlanning > 0){
-    $planningPercent = ($totalProduction/$totalPlanning)*100;
-}
-if($totalStockSM  > 0){
-    $stockSupermarketPercent = ($totalStockSM / $totalPlanning) * 100;
-}
-
-if($remainingPlanning > 0){
-    $remainingPercent = ($remainingPlanning / $totalPlanning) * 100;
-}
-/*
-|--------------------------------------------------------------------------
-| PLAN VS PACKING
-|--------------------------------------------------------------------------
-*/
-
-$chartData = mysqli_query($conn,"
-
+$getPlanning = mysqli_query($conn,"
 SELECT
 
-    p.line_produksi,
+    d.id,
+    d.style,
+    d.model,
+    d.colour,
+    d.mcs,
+    d.category,
+    d.kg,
 
-    p.total_plan,
+    d.status,
+    d.reject_reason,
 
-    IFNULL(k.total_packing,0) AS total_packing
 
-FROM
+    MAX(CASE WHEN s.size='1' THEN s.qty END) AS size_1,
+    MAX(CASE WHEN s.size='1T' THEN s.qty END) AS size_1T,
+    MAX(CASE WHEN s.size='2' THEN s.qty END) AS size_2,
+    MAX(CASE WHEN s.size='2T' THEN s.qty END) AS size_2T,
+    MAX(CASE WHEN s.size='3' THEN s.qty END) AS size_3,
+    MAX(CASE WHEN s.size='3T' THEN s.qty END) AS size_3T,
+    MAX(CASE WHEN s.size='4' THEN s.qty END) AS size_4,
+    MAX(CASE WHEN s.size='4T' THEN s.qty END) AS size_4T,
+    MAX(CASE WHEN s.size='5' THEN s.qty END) AS size_5,
+    MAX(CASE WHEN s.size='5T' THEN s.qty END) AS size_5T,
+    MAX(CASE WHEN s.size='6' THEN s.qty END) AS size_6,
+    MAX(CASE WHEN s.size='6T' THEN s.qty END) AS size_6T,
+    MAX(CASE WHEN s.size='7' THEN s.qty END) AS size_7,
+    MAX(CASE WHEN s.size='7T' THEN s.qty END) AS size_7T,
+    MAX(CASE WHEN s.size='8' THEN s.qty END) AS size_8,
+    MAX(CASE WHEN s.size='8T' THEN s.qty END) AS size_8T,
+    MAX(CASE WHEN s.size='9' THEN s.qty END) AS size_9,
+    MAX(CASE WHEN s.size='9T' THEN s.qty END) AS size_9T,
+    MAX(CASE WHEN s.size='10' THEN s.qty END) AS size_10,
+    MAX(CASE WHEN s.size='10T' THEN s.qty END) AS size_10T,
+    MAX(CASE WHEN s.size='11' THEN s.qty END) AS size_11,
+    MAX(CASE WHEN s.size='11T' THEN s.qty END) AS size_11T,
+    MAX(CASE WHEN s.size='12' THEN s.qty END) AS size_12,
+    MAX(CASE WHEN s.size='12T' THEN s.qty END) AS size_12T,
+    MAX(CASE WHEN s.size='13' THEN s.qty END) AS size_13,
+    MAX(CASE WHEN s.size='13T' THEN s.qty END) AS size_13T,
+    MAX(CASE WHEN s.size='14' THEN s.qty END) AS size_14,
+    MAX(CASE WHEN s.size='14T' THEN s.qty END) AS size_14T,
+    MAX(CASE WHEN s.size='15' THEN s.qty END) AS size_15
 
-(
-    SELECT
-        h.line_produksi,
-        SUM(d.qty) AS total_plan
 
-    FROM tbl_daily_plan_header h
+FROM tbl_request_detail d
 
-    INNER JOIN tbl_daily_plan_detail d
-        ON h.id_daily_header = d.id_daily_header
+LEFT JOIN tbl_request_size s
+ON d.id=s.detail_id
 
-    WHERE h.tanggal_plan = '$selectedDate'
-    AND d.type = 'PLAN'
-    AND d.shift = '$selectedShift'
+GROUP BY d.id
 
-    GROUP BY h.line_produksi
-
-) p
-
-LEFT JOIN
-
-(
-    SELECT
-        t.cost_center,
-        SUM(m.qty) AS total_packing
-    FROM tbl_transaction_scan t
-
-    INNER JOIN tbl_master_barcode m
-        ON m.qr_code = t.qr_code
-
-    WHERE t.type_scan = 'OUT_PACKING'
-    AND t.shift = '$selectedShift'
-    AND DATE(t.date_scan) = '$selectedDate'
-
-    GROUP BY t.cost_center
-
-) k
-
-ON CONCAT('Line ', p.line_produksi) = k.cost_center
-ORDER BY p.line_produksi
+ORDER BY d.id DESC
 
 ");
 
-$labels = [];
-$planData = [];
-$packingData = [];
-
-while($row = mysqli_fetch_assoc($chartData))
-{
-    $labels[] = "Line ".$row['line_produksi'];
-    $planData[] = (int)$row['total_plan'];
-    $packingData[] = (int)$row['total_packing'];
-}
 ?>
 
 <style>
@@ -230,6 +96,27 @@ while($row = mysqli_fetch_assoc($chartData))
       background:white;
       border-bottom:1px solid #f1f1f1;
   }
+
+    table.dataTable thead th,
+    table.dataTable tbody td{
+        white-space: nowrap;
+    }
+
+    .dtfc-fixed-left{
+        background:#fff !important;
+    }
+
+    table.dataTable{
+        width:100% !important;
+    }
+
+    .table-danger td{
+    background-color:#f8d7da !important;
+    }
+
+    .table-success td{
+        background-color:#d4edda !important;
+    }
 </style>
 
 <!DOCTYPE html>
@@ -240,7 +127,7 @@ while($row = mysqli_fetch_assoc($chartData))
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>iPhylon | Dashboard MES</title>
+    <title>iMaturing | Dashboard</title>
 
     <link rel="icon" href="assets/images/i.Phylon.png" type="image/x-icon">
     
@@ -254,14 +141,15 @@ while($row = mysqli_fetch_assoc($chartData))
 
     <!-- AdminLTE -->
     <link rel="stylesheet"
-        href="dist/css/adminlte.min.css">
+      href="dist/css/adminlte.min.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 
-    <!-- Data Label -->
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 
-    
+    <!-- Fixed Columns -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.bootstrap4.min.css"> 
 
 </head>
 
@@ -285,9 +173,9 @@ while($row = mysqli_fetch_assoc($chartData))
                     </div>
 
                     <div class="col-sm-6 text-right">
-                        <h5>
-                            <?= date('d F Y', strtotime($selectedDate)); ?> | Shift : <?= $selectedShift; ?>
-                        </h5>
+                        
+                            <h5> <?= date('d F Y'); ?></h5>
+                        
                     </div>
                 </div>
             </div>
@@ -296,180 +184,173 @@ while($row = mysqli_fetch_assoc($chartData))
         <!-- CONTENT -->
         <section class="content">
             <div class="container-fluid">
-                
-                <!-- Stat Cards -->
-                <div class="row mt-12">
-                    <div class="col-lg">
-                        <div class="card stat-card shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <p class="text-muted mb-1">
-                                            Total Orders
-                                        </p>
-                                        <h2><?= number_format($totalOrder); ?></h2>
-                                        <span class="text-info">
-                                            Of Lot Basis
-                                        </span>
-                                    </div>
 
-                                    <div class="stat-icon bg-info">
-                                        <i class="fas fa-dollar-sign"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-lg col-md-6">
-                        <div class="card stat-card shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <p class="text-muted mb-1">
-                                            Total Planning
-                                        </p>
-                                        <h2><?= number_format($totalPlanning) ?></h2>
-                                        <span class="text-warning">
-                                            <?= number_format($planningOrderPercent,1); ?> % of Order
-                                        </span>
-                                    </div>
-
-                                    <div class="stat-icon bg-warning">
-                                        <i class="fas fa-clipboard-list"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg col-md-6">
-                        <div class="card stat-card shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <p class="text-muted mb-1">
-                                            Total Production
-                                        </p>
-                                        <h2><?= number_format($totalProduction) ?></h2>
-                                        <span class="text-primary">
-                                            <?= number_format($planningPercent,1) ?> % of Total Plan
-                                        </span>
-                                    </div>
-
-                                    <div class="stat-icon bg-primary">
-                                        <i class="fas fa-box"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg col-md-6">
-                        <div class="card stat-card shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <p class="text-muted mb-1">
-                                        Stock SM IP
-                                        </p>
-                                        <h2><?= number_format($totalStockSM); ?></h2>
-                                        <span class="text-success">
-                                            IN SM - OUT SM
-                                        </span>
-                                    </div>
-
-                                    <div class="stat-icon bg-success">
-                                        <i class="fas fa-store"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg col-md-6">
-                        <div class="card stat-card shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <p class="text-muted mb-1">
-                                            Remaining
-                                        </p>
-                                        <h2><?= number_format($remainingPlanning) ?></h2>
-                                        <span class="text-danger">
-                                            <?= number_format($remainingPercent,1); ?>% of Remaining
-                                        </span>
-                                    </div>
-
-                                    <div class="stat-icon bg-danger">
-                                        <i class="fas fa-clock"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- History -->
-                <div class="card mb-3">
-                    <div class="card-body">
-
-                        <form method="GET" class="d-flex justify-content-end align-items-center mb-0">
-
-                            <span>
-                                <h5 class="mb-0 mr-4 text-primary">
-                                <i class="fas fa-history"></i>
-                                History
-                                </h5>
-                            </span>
-
-                            <input
-                                type="date"
-                                name="tanggal"
-                                value="<?= $selectedDate ?>"
-                                class="form-control mr-2"
-                                style="width:180px;">
-
-                            <select
-                                name="shift"
-                                class="form-control mr-2"
-                                style="width:120px;">
-
-                                <option value="1" <?= $selectedShift==1?'selected':''; ?>>Shift 1</option>
-                                <option value="2" <?= $selectedShift==2?'selected':''; ?>>Shift 2</option>
-                                <option value="3" <?= $selectedShift==3?'selected':''; ?>>Shift 3</option>
-
-                            </select>
-
-                            <button class="btn btn-primary">
-                                <i class="fas fa-search"></i>
-                            </button>
-
-                        </form>
-
-                    </div>
-                </div>
-
-                <!-- CHART + LIVE -->
                 <div class="row">
 
-                    <!-- CHART -->
                     <div class="col-md-12">
+
                         <div class="card card-info">
 
                             <div class="card-header">
+
                                 <h3 class="card-title">
-                                    Production Output
+                                    Dashboard Status
                                 </h3>
+
                             </div>
 
                             <div class="card-body">
-                                <canvas id="productionChart"
-                                    height="100">
-                                </canvas>
+                                <div>
+                                    <table id="tblDashboard"
+                                        class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Style</th>
+                                                <th>Model</th>
+                                                <th>Colour</th>
+                                                <th>MCS</th>
+                                                <th>Category</th>
+                                                <th>1</th>
+                                                <th>1T</th>
+                                                <th>2</th>
+                                                <th>2T</th>
+                                                <th>3</th>
+                                                <th>3T</th>
+                                                <th>4</th>
+                                                <th>4T</th>
+                                                <th>5</th>
+                                                <th>5T</th>
+                                                <th>6</th>
+                                                <th>6T</th>
+                                                <th>7</th>
+                                                <th>7T</th>
+                                                <th>8</th>
+                                                <th>8T</th>
+                                                <th>9</th>
+                                                <th>9T</th>
+                                                <th>10</th>
+                                                <th>10T</th>
+                                                <th>11</th>
+                                                <th>11T</th>
+                                                <th>12</th>
+                                                <th>12T</th>
+                                                <th>13</th>
+                                                <th>13T</th>
+                                                <th>14</th>
+                                                <th>14T</th>
+                                                <th>15</th>
+                                                <th>Kg</th>
+                                                <th>Status</th>
+                                                <th>Note</th>
+
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+                                            <?php
+                                            $no=1;
+                                            while($row=mysqli_fetch_assoc($getPlanning))
+                                            {
+                                            ?>
+
+                                            <tr
+                                                <?php
+                                                if($row['status']=='Rejected'){
+                                                    echo 'class="table-danger"';
+                                                }
+                                                elseif($row['status']=='Approved'){
+                                                    echo 'class="table-success"';
+                                                }
+                                                ?>
+                                                >
+                                            <td><?= $no++; ?></td>
+                                            <td><?= $row['style']; ?></td>
+                                            <td><?= $row['model']; ?></td>
+                                            <td><?= $row['colour']; ?></td>
+                                            <td><?= $row['mcs']; ?></td>
+                                            <td><?= $row['category']; ?></td>
+
+                                            <td><?= $row['size_1'] ?? 0 ?></td>
+                                            <td><?= $row['size_1T'] ?? 0 ?></td>
+                                            <td><?= $row['size_2'] ?? 0 ?></td>
+                                            <td><?= $row['size_2T'] ?? 0 ?></td>
+                                            <td><?= $row['size_3'] ?? 0 ?></td>
+                                            <td><?= $row['size_3T'] ?? 0 ?></td>
+                                            <td><?= $row['size_4'] ?? 0 ?></td>
+                                            <td><?= $row['size_4T'] ?? 0 ?></td>
+                                            <td><?= $row['size_5'] ?? 0 ?></td>
+                                            <td><?= $row['size_5T'] ?? 0 ?></td>
+                                            <td><?= $row['size_6'] ?? 0 ?></td>
+                                            <td><?= $row['size_6T'] ?? 0 ?></td>
+                                            <td><?= $row['size_7'] ?? 0 ?></td>
+                                            <td><?= $row['size_7T'] ?? 0 ?></td>
+                                            <td><?= $row['size_8'] ?? 0 ?></td>
+                                            <td><?= $row['size_8T'] ?? 0 ?></td>
+                                            <td><?= $row['size_9'] ?? 0 ?></td>
+                                            <td><?= $row['size_9T'] ?? 0 ?></td>
+                                            <td><?= $row['size_10'] ?? 0 ?></td>
+                                            <td><?= $row['size_10T'] ?? 0 ?></td>
+                                            <td><?= $row['size_11'] ?? 0 ?></td>
+                                            <td><?= $row['size_11T'] ?? 0 ?></td>
+                                            <td><?= $row['size_12'] ?? 0 ?></td>
+                                            <td><?= $row['size_12T'] ?? 0 ?></td>
+                                            <td><?= $row['size_13'] ?? 0 ?></td>
+                                            <td><?= $row['size_13T'] ?? 0 ?></td>
+                                            <td><?= $row['size_14'] ?? 0 ?></td>
+                                            <td><?= $row['size_14T'] ?? 0 ?></td>
+                                            <td><?= $row['size_15'] ?? 0 ?></td>
+
+                                            <td><?= $row['kg']; ?></td>
+                                            <td class="text-center">
+                                                <?php if($row['status']=='Approved'){ ?>
+                                                <span class="badge badge-success">
+                                                    <i class="fas fa-check"></i>
+                                                    Approved
+                                                </span>
+                                                <?php }elseif($row['status']=='Rejected'){ ?>
+                                                <span class="badge badge-danger">
+                                                    <i class="fas fa-times"></i>
+                                                    Rejected
+                                                </span>
+                                                <?php }else{ ?>
+
+                                                <span class="badge badge-warning">
+                                                    <i class="fas fa-clock"></i>
+                                                    Pending
+                                                </span>
+                                                <?php } ?>
+                                                </td>
+
+                                            <td>
+                                                <?php
+                                                if($row['status']=='Rejected')
+                                                {
+                                                    echo htmlspecialchars($row['reject_reason']);
+                                                }
+                                                elseif($row['status']=='Approved')
+                                                {
+                                                    echo "Ready";
+                                                }
+                                                else
+                                                {
+                                                    echo "-";
+                                                }
+                                                ?>
+                                                </td>
+                                            </tr>
+
+                                            <?php } ?>
+
+                                        </tbody>
+                                    </table>
+                                    
+                                </div>
                             </div>
                         </div>
-                    </div>   
+                    </div>
                 </div>
         </section>
     </div>
@@ -484,185 +365,41 @@ while($row = mysqli_fetch_assoc($chartData))
 
 </div>
 
-<!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
-
-<!-- Bootstrap -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-<!-- AdminLTE -->
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
 <script src="dist/js/adminlte.min.js"></script>
 
+
 <script>
-const ctx = document.getElementById('productionChart');
-new Chart(ctx, {
-
-    plugins: [ChartDataLabels],
-
-    type: 'bar',
-
-    data: {
-
-        labels: <?= json_encode($labels); ?>,
-
-        datasets: [
-           {
-    label: 'Plan',
-    data: <?= json_encode($planData); ?>,
-    backgroundColor: '#ffc107',
-    borderColor: '#ffc107',
-    borderWidth: 1
-},
-
-{
-    label: 'Packing',
-    data: <?= json_encode($packingData); ?>,
-    backgroundColor: '#28a745',
-    borderColor: '#28a745',
-    borderWidth: 1
-}
-        ]
-    },
-
-    options: {
-
-    onClick: function(evt, elements)
-    {
-        if(elements.length > 0)
-        {
-            let index = elements[0].index;
-            let datasetIndex = elements[0].datasetIndex;
-
-            let line =
-                this.data.labels[index]
-                    .replace('Line ','');
-
-            let type =
-                datasetIndex == 0
-                ? 'PLAN'
-                : 'PACKING';
-
-            loadDetail(line,type);
-        }
-    },
-
-    scales: {
-        y: {
-            beginAtZero: true
-        }
-    }
-    }
-
-});
-
-setInterval(function () {
-    window.location.href = "dashboard.php";
-}, 120000);
-
-function loadDetail(line,type)
-{
-    $('#detailChartModal').modal('show');
-    $('#detailChartBody').html('Loading...');
-    $.ajax({
-
-        url : 'ajax_dashboard_detail.php',
-
-        type : 'POST',
-
-        data : {
-            line    : line,
-            type    : type,
-            shift   : <?= json_encode($selectedShift) ?>,
-            tanggal : <?= json_encode($selectedDate) ?>
-        },
-
-        success:function(result)
-        {
-            $('#detailChartBody').html(result);
-        }
-
-    });
-}
-
-function loadOutputPerHour(line,shift,item,colour)
-{
-    $('#hourlyModal').modal('show');
-    $('#hourlyBody').html('Loading...');
-    $.ajax({
-
-        url : 'ajax_output_per_hour.php',
-
-        type : 'POST',
-        data : {
-            line    : line,
-            shift   : shift,
-            tanggal : <?= json_encode($selectedDate) ?>,
-            item    : item,
-            colour  : colour
-        },
-
-        success:function(result)
-        {
-            $('#hourlyBody').html(result);
-        }
-
-    });
-}
-
-$('#hourlyModal').on('hidden.bs.modal', function () {
-
-    $('body').addClass('modal-open');
-
-});
 
 </script>
 
-    <div class="modal fade" id="detailChartModal">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header bg-info">
-                    <h4 class="modal-title">
-                        Production Detail
-                    </h4>
-
-                    <button type="button"
-                            class="close"
-                            data-dismiss="modal">
-                        &times;
-                    </button>
-                </div>
-
-                <div class="modal-body" id="detailChartBody">
-                    Loading...
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="hourlyModal">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header bg-success">
-                    <h4 class="modal-title">
-                        Output Per Hour
-                    </h4>
-
-                    <button type="button"
-                            class="close"
-                            data-dismiss="modal">
-                        &times;
-                    </button>
-                </div>
-
-                <div class="modal-body"
-                    id="hourlyBody">
-                    Loading...
-                </div>
-            </div>
-        </div>
-    </div>
-
 <script>
+    $('#tblDashboard').DataTable({
+
+        responsive:false,
+
+        scrollX:true,
+        scrollY:"550px",
+        scrollCollapse:true,
+
+        paging:true,
+        searching:true,
+        ordering:true,
+
+        autoWidth:false,
+
+        fixedColumns:{
+            leftColumns:6
+        }
+
+    });
+
     window.addEventListener('load', function () {
 
         if (window.location.search !== '') {
@@ -671,5 +408,6 @@ $('#hourlyModal').on('hidden.bs.modal', function () {
 
     });
 </script>
+
 </body>
 </html>

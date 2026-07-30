@@ -10,7 +10,6 @@ if(isset($_POST['register'])){
     $nik       = trim($_POST['nik']);
     $password  = trim($_POST['password']);
     $authorize = trim($_POST['authorize']);
-    $scan_type = trim($_POST['scan_type']);
     $cost_center = trim($_POST['cost_center']);
 
     // VALIDASI NIK
@@ -34,7 +33,6 @@ if(isset($_POST['register'])){
             nik,
             password,
             authorize,
-            scan_type,
             cost_center
         )
         VALUES
@@ -43,7 +41,6 @@ if(isset($_POST['register'])){
             '$nik',
             '$password',
             '$authorize',
-            '$scan_type',
             '$cost_center'
         )
     ");
@@ -72,7 +69,6 @@ if(isset($_POST['update_user'])){
     $nik         = $_POST['nik'];
     $password    = $_POST['password'];
     $authorize   = $_POST['authorize'];
-    $scan_type   = $_POST['scan_type'];
     $cost_center = $_POST['cost_center'];
 
     mysqli_query($conn,"
@@ -82,7 +78,6 @@ if(isset($_POST['update_user'])){
             nik='$nik',
             password='$password',
             authorize='$authorize',
-            scan_type='$scan_type',
             cost_center='$cost_center'
         WHERE id_user='$id_user'
     ");
@@ -108,7 +103,7 @@ $MasterUser = mysqli_query($conn,"
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>iPhylon | Master User</title>
+<title>iMaturing | Master User</title>
 
 <link rel="icon" href="assets/images/i.Phylon.png" type="image/x-icon">
 <!-- Google Font -->
@@ -234,7 +229,7 @@ Register New User
         </div>
       </div>
 
-    <div class="col-md-4">
+    <div class="col-md-2">
       <div class="form-group">
         <label>NIK</label>
         <input type="text"
@@ -243,7 +238,7 @@ Register New User
       </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-2">
       <div class="form-group">
         <label>Password</label>
         <input type="password"
@@ -252,7 +247,7 @@ Register New User
       </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-2">
       <div class="form-group">
         <label>Authorize</label>
           <select name="authorize"
@@ -271,40 +266,11 @@ Register New User
           </option>
 
           </select>
-
-      </div>
-
-    </div>
-
-    <div class="col-md-4">
-      <div class="form-group">
-        <label>Scan Type</label>
-        <select name="scan_type"
-          class="form-control"
-          required>
-
-          <option value="">
-          Select Scan Type
-          </option>
-
-          <option value="OUT_PACKING">
-          OUT PACKING
-          </option>
-
-          <option value="IN_SM">
-          IN SUPERMARKET
-          </option>
-
-          <option value="OUT_SM">
-          OUT SUPERMARKET
-          </option>
-        </select>
       </div>
     </div>
-
-    <div class="col-md-4">
+    <div class="col-md-2">
       <div class="form-group">
-        <label>Line</label>
+        <label>Cost Center</label>
         <select name="cost_center"
           class="form-control"
           required>
@@ -313,37 +279,15 @@ Register New User
           Select Line
           </option>
 
-          <option value="Line 1">
-          Line 1
+          <option value="Planning">
+          Planning
           </option>
-          <option value="Line 2">
-          Line 2
+          <option value="Production">
+          Production
           </option>
-          <option value="Line 3">
-          Line 3
+          <option value="QA">
+          QA
           </option>
-          <option value="Line 4">
-          Line 4
-          </option>
-          <option value="Line 5">
-          Line 5
-          </option>
-          <option value="Line 6">
-            Line 6
-          </option>
-          <option value="Line 7">
-            Line 7
-          </option>
-          <option value="Line 8">
-            Line 8
-          </option>
-          <option value="Supermarket">
-            Supermarket
-          </option>
-           <option value="Planning">
-            Planning
-          </option>
-          
         </select>
       </div>
     </div>
@@ -386,7 +330,6 @@ class="table table-bordered table-striped">
 <th width="250">Nama</th>
 <th>NIK</th>
 <th>Authorize</th>
-<th>Scan Type</th>
 <th>Line</th>
 <th width="50">Action</th>
 </tr>
@@ -408,9 +351,6 @@ class="table table-bordered table-striped">
     </td>
     <td>
         <?= $MU['authorize']; ?>
-    </td>
-    <td>
-        <?= $MU['scan_type']; ?>
     </td>
     <td>
         <?= $MU['cost_center']; ?>
@@ -530,39 +470,8 @@ class="table table-bordered table-striped">
                     </div>
 
                     <div class="form-group">
-
                         <label>
-                            Scan Type
-                        </label>
-
-                        <select
-                            name="scan_type"
-                            class="form-control"
-                            required>
-
-                            <option
-                                value="OUT_PACKING"
-                                <?= ($MU['scan_type'] == 'OUT_PACKING') ? 'selected' : ''; ?>>
-                                OUT PACKING
-                            </option>
-
-                            <option
-                                value="IN_SM"
-                                <?= ($MU['scan_type'] == 'IN_SM') ? 'selected' : ''; ?>>
-                                IN SUPERMARKET
-                            </option>
-
-                            <option
-                                value="OUT_SM"
-                                <?= ($MU['scan_type'] == 'OUT_SM') ? 'selected' : ''; ?>>
-                                OUT SUPERMARKET
-                            </option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>
-                            Line
+                            Cost Center
                         </label>
 
                         <select
@@ -571,63 +480,23 @@ class="table table-bordered table-striped">
                             required>
 
                             <option
-                                value="Line 1"
-                                <?= ($MU['cost_center'] == 'Line 1') ? 'selected' : ''; ?>>
-                                Line 1
-                            </option>
-
-                            <option
-                                value="Line 2"
-                                <?= ($MU['cost_center'] == 'Line 2') ? 'selected' : ''; ?>>
-                                Line 2
-                            </option>
-
-                            <option
-                                value="Line 3"
-                                <?= ($MU['cost_center'] == 'Line 3') ? 'selected' : ''; ?>>
-                                Line 3
-                            </option>
-
-                            <option
-                                value="Line 4"
-                                <?= ($MU['cost_center'] == 'Line 4') ? 'selected' : ''; ?>>
-                                Line 4
-                            </option>
-
-                            <option
-                                value="Line 5"
-                                <?= ($MU['cost_center'] == 'Line 5') ? 'selected' : ''; ?>>
-
-                                Line 5
-                            </option>
-
-                            <option
-                                value="Line 6"
-                                <?= ($MU['cost_center'] == 'Line 6') ? 'selected' : ''; ?>>
-                                Line 6
-                            </option>
-
-                            <option
-                                value="Line 7"
-                                <?= ($MU['cost_center'] == 'Line 7') ? 'selected' : ''; ?>>
-                                Line 7
-                            </option>
-
-                            <option
-                                value="Line 8"
-                                <?= ($MU['cost_center'] == 'Line 8') ? 'selected' : ''; ?>>
-                                Line 8
-                            </option>
-                            <option
-                                value="Supermarket"
-                                <?= ($MU['cost_center'] == 'Supermarket') ? 'selected' : ''; ?>>
-                                Supermarket
-                            </option>
-                            <option
                                 value="Planning"
                                 <?= ($MU['cost_center'] == 'Planning') ? 'selected' : ''; ?>>
-                                Planning    
+                                Planning
                             </option>
+
+                            <option
+                                value="Production"
+                                <?= ($MU['cost_center'] == 'Production') ? 'selected' : ''; ?>>
+                                Production
+                            </option>
+
+                            <option
+                                value="QA"
+                                <?= ($MU['cost_center'] == 'QA') ? 'selected' : ''; ?>>
+                                QA
+                            </option>
+
                         </select>
                     </div>
                 </div>
@@ -638,18 +507,14 @@ class="table table-bordered table-striped">
                         type="button"
                         class="btn btn-secondary"
                         data-dismiss="modal">
-
                         Close
-
                     </button>
 
                     <button
                         type="submit"
                         name="update_user"
                         class="btn btn-warning">
-
                         Update User
-
                     </button>
                 </div>
             </form>

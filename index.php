@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 if (!isset($_SESSION['login'])) {
@@ -26,7 +27,7 @@ if (!isset($_SESSION['login'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>iPhylon | Home</title>
+  <title>iMaturing | Home</title>
 
   <link rel="icon" href="assets/images/i.Phylon.png" type="image/x-icon">
   
@@ -67,9 +68,9 @@ if (!isset($_SESSION['login'])) {
         <div class="container-fluid">
             <div class="row mb-3">
                 <div class="col-sm-6">
-                    <h1 class="m-0 font-weight-bold"><img src="assets/images/i.Phylon-1.png" alt="" width="100"></h1>
+                    <h1 class="m-0 font-weight-bold"><img src="assets/images/imaturing.png" alt="" width="100"></h1>
                     <small class="text-muted">
-                        Overview of your system and key metrics
+                        Overview of your stock maturing application
                     </small>
                 </div>
 
@@ -99,11 +100,11 @@ if (!isset($_SESSION['login'])) {
                             <h5>Hello, <?= $_SESSION['username']; ?> 👋</h5>
 
                             <h1 class="font-weight-bold mb-3">
-                                Welcome to IP Dashboard
+                                Welcome to Maturing Dashboard
                             </h1>
 
                             <p class="mb-0">
-                                Here's what's happening with your production system today.
+                                Here's what's happening with your maturing stock system today.
                             </p>
                         </div>
 

@@ -59,7 +59,7 @@ $scan_type = $_SESSION['scan_type'];
     alt="Logo"
     class="brand-image img-circle elevation-3">
     <span class="brand-text font-weight-light">
-      iPhylon
+      iMaturing
     </span>
   </a>
 
@@ -94,91 +94,65 @@ $scan_type = $_SESSION['scan_type'];
               class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>
-                  Production
-                </p>
-              </a>
-            </li>
-          </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="dashboard_sm.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Supermarket
+                  Maturing
                 </p>
               </a>
             </li>
           </ul>
         </li>
 
-        <!-- ===================================== -->
-        <!-- ADMIN -->
-        <!-- ===================================== -->
-        <?php if($authorize == "Admin") : ?>
+       <li class="nav-header">
+            TRANSACTION
+          </li>
 
-        <li class="nav-header">
-          TRANSACTIONS
-        </li>
+          <li class="nav-item">
+            <a href="#"
+            class="nav-link">
 
-        <!-- PACKING -->
-        <li class="nav-item">
-          <a href="#"
-          class="nav-link">
-            <i class="nav-icon fas fa-box"></i>
-            <p>
-              Packing Production
-              <i class="fas fa-angle-left right"></i>
-            </p>
-          </a>
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Input Data
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
 
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="out_packing.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Scan Out
-                </p>
-              </a>
-            </li>
-          </ul>
-        </li>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="spk_planning.php"
+                class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    SPK Planning
+                  </p>
+                </a>
+              </li>  
+            </ul>
 
-        <!-- SUPERMARKET -->
-        <li class="nav-item">
-          <a href="#"
-          class="nav-link">
-            <i class="nav-icon fas fa-warehouse"></i>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="qa_process.php"
+                class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    QA Process
+                  </p>
+                </a>
+              </li>  
+            </ul>
 
-            <p>
-              Supermarket
-              <i class="fas fa-angle-left right"></i>
-            </p>
-          </a>
-
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="in_sm.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Scan In
-                </p>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a href="out_sm.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Scan Out
-                </p>
-              </a>
-            </li>
-          </ul>
-        </li>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="Inventory.php"
+                class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Inventory
+                  </p>
+                </a>
+              </li>  
+            </ul>
+          </li>
+        
 
         <!-- MASTER -->
         <li class="nav-header">
@@ -216,40 +190,10 @@ $scan_type = $_SESSION['scan_type'];
                 </p>
               </a>
             </li>
-
-            <li class="nav-item">
-              <a href="master_planning.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Planning
-                </p>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a href="daily_plan.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Daily Plan
-                </p>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a href="master_qrcode.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  QR Code
-                </p>
-              </a>
-            </li>
           </ul>
         </li>
 
-        <?php endif; ?>
+        
 
         <!-- ===================================== -->
         <!-- USER OUT PACKING -->
@@ -352,79 +296,6 @@ $scan_type = $_SESSION['scan_type'];
         </li>
 
         <?php endif; ?>
-
-        <li class="nav-header">
-          DATA
-        </li>
-
-        <li class="nav-item">
-          <a href="#"
-          class="nav-link">
-
-            <i class="nav-icon fas fa-book"></i>
-            <p>
-              Report
-              <i class="fas fa-angle-left right"></i>
-            </p>
-          </a>
-
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="report_minus_packing.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Minus by Colour
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="report_daily_scan.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Daily Scan
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="report_stock_sm_ip.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Stock SM IP
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="report_input_sm.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Output by Size
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="report_tracking_qrcode.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  QR Code Viewer
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="report_breakdown.php"
-              class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Breakdown
-                </p>
-              </a>
-            </li>
-          </ul>
-        </li>
 
         <!-- LOGOUT -->
         <li class="nav-header">

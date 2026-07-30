@@ -35,7 +35,7 @@ if (!function_exists('login_validate')) {
   $tgl_jumat    = date('l, Y-m-d', strtotime("Friday", $tgl_sekarang));
 
   //Koneksi ke DBMS
-$conn = mysqli_connect("localhost:3306","root","","db_iphylon");
+$conn = mysqli_connect("localhost:3306","root","","db_imaturing");
 
   //mengambil data
   function query ($query){
