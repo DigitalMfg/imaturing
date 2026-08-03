@@ -364,6 +364,7 @@ Filter Report
             <option value="RETURN">RETURN</option>
             <option value="PROMO">PROMO</option>
             <option value="MINUS BUCKET">MINUS BUCKET</option>
+            <option value="REMAKE">REMAKE</option>
 
         </select>
     </div>
@@ -410,6 +411,7 @@ Filter Report
                         <th>14</th>
                         <th>14T</th>
                         <th>15</th>
+                        <th>Total</th>
                         <th>Kg <span class="text-danger">*</span></th>
 
                     </tr>
@@ -419,35 +421,36 @@ Filter Report
                 <tbody>
                     <tr>
 
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[1]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[1T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[2]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[2T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[3]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[3T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[4]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[4T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[5]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[5T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[6]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[6T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[7]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[7T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[8]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[8T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[9]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[9T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[10]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[10T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[11]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[11T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[12]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[12T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[13]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[13T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[14]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[14T]" min="0"></td>
-                        <td><input type="number" class="form-control form-control-sm text-center" name="size_run[15]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[1]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[1T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[2]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[2T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[3]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[3T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[4]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[4T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[5]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[5T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[6]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[6T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[7]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[7T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[8]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[8T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[9]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[9T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[10]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[10T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[11]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[11T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[12]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[12T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[13]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[13T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[14]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[14T]" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center size-input" name="size_run[15]" min="0"></td>
+                        <td><input type="number" id="total_qty" class="form-control form-control-sm text-center bg-light" readonly value="0"></td>
                         <td><input type="number" class="form-control form-control-sm text-center" name="size_run[Kg]" placeholder="Kg" step="0.01" min="0.01" required> </td>
 
                     </tr>
@@ -703,7 +706,9 @@ $(function(){
 
         $('#modalEdit').modal('show');
 
-        $('#editBody').load('ajax_edit_request.php?id=' + id);
+        $('#editBody').load('ajax_edit_request.php?id=' + id,function(){
+        hitungTotalEdit();
+        });
 
 });
 
@@ -759,6 +764,35 @@ $(function(){
 
     });
 
+});
+
+function hitungTotal(){
+        let total = 0;
+        $('.size-input').each(function(){
+            let nilai = parseInt($(this).val());
+            if(!isNaN(nilai)){
+                total += nilai;
+            }
+        });
+        $('#total_qty').val(total);
+    }
+    $(document).on('keyup change','.size-input',function(){
+
+        hitungTotal();
+
+});
+
+function hitungTotalEdit(){
+    let total = 0;
+    $('.edit-size').each(function(){
+        total += parseInt($(this).val()) || 0;
+    });
+
+    $('#edit_total').val(total);
+}
+
+$(document).on('input','.edit-size',function(){
+    hitungTotalEdit();
 });
 
 </script>

@@ -90,13 +90,19 @@ while($row = mysqli_fetch_assoc($qSize)){
     $sizeRun[$row['size']] = $row['qty'];
 }
 
-// Urutan size
-$sizes = [
-    '1','1T','2','2T','3','3T','4','4T','5','5T',
-    '6','6T','7','7T','8','8T','9','9T',
-    '10','10T','11','11T','12','12T',
-    '13','13T','14','14T','15'
-];
+// Hitung total qty size
+$totalQty = array_sum($sizeRun);
+
+// Size yang tampil sesuai input
+$sizes = array_keys($sizeRun);
+
+// Untuk menampilkan semua size dari 1 sampai 15, termasuk T (Toddler)
+// $sizes = [
+//     '1','1T','2','2T','3','3T','4','4T','5','5T',
+//     '6','6T','7','7T','8','8T','9','9T',
+//     '10','10T','11','11T','12','12T',
+//     '13','13T','14','14T','15'
+// ];
 
 ?>
 
@@ -107,16 +113,24 @@ $sizes = [
                 <?php foreach($sizes as $size){ ?>
                     <th><?= $size ?></th>
                 <?php } ?>
+                <th>Total</th>
             </tr>
         </thead>
+
 
         <tbody>
             <tr>
                 <?php foreach($sizes as $size){ ?>
                     <td>
-                        <?= isset($sizeRun[$size]) ? $sizeRun[$size] : 0; ?>
+                        <?= $sizeRun[$size]; ?>
                     </td>
                 <?php } ?>
+
+
+                <td class="font-weight-bold">
+                    <?= $totalQty; ?>
+                </td>
+
             </tr>
         </tbody>
     </table>
