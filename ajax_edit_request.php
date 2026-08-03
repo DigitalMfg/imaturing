@@ -157,11 +157,9 @@ $sizes = [
         <tr>
 
             <?php foreach($sizes as $s){ ?>
-
-                <th><?= $s ?></th>
-
+            <th><?= $s ?></th>
             <?php } ?>
-
+            <th>Total</th>
             <th>Kg</th>
 
         </tr>
@@ -169,37 +167,47 @@ $sizes = [
     </thead>
 
     <tbody>
-
         <tr>
+        <?php
+        $total = 0;
+        foreach($sizes as $s){
+            $qty = isset($size[$s]) ? $size[$s] : '';
+            $total += (int)$qty;
+        ?>
 
-            <?php foreach($sizes as $s){ ?>
+        <td>
+            <input
+                type="number"
+                class="form-control form-control-sm text-center edit-size"
+                name="size_run[<?= $s ?>]"
+                value="<?= $qty ?>">
+        </td>
 
-                <td>
+        <?php } ?>
 
-                    <input
-                        type="number"
-                        class="form-control form-control-sm text-center"
-                        name="size_run[<?= $s ?>]"
-                        value="<?= isset($size[$s]) ? $size[$s] : '' ?>">
+        <td>
+            <input
+                type="number"
+                id="edit_total"
+                class="form-control form-control-sm text-center bg-light"
+                value="<?= $total ?>"
+                readonly>
+        </td>
 
-                </td>
+        <td>
 
-            <?php } ?>
+            <input
+                type="number"
+                step="0.01"
+                class="form-control form-control-sm text-center"
+                name="kg"
+                value="<?= $data['kg'] ?>">
 
-            <td>
-
-                <input
-                    type="number"
-                    step="0.01"
-                    class="form-control form-control-sm text-center"
-                    name="kg"
-                    value="<?= $data['kg'] ?>">
-
-            </td>
+        </td>
 
         </tr>
 
-    </tbody>
+        </tbody>
 
 </table>
 

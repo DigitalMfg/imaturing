@@ -242,7 +242,7 @@ ORDER BY d.id DESC
                                                 <th>14T</th>
                                                 <th>15</th>
                                                 <th>Kg</th>
-                                                <th>Status</th>
+                                                <th>Colour Status</th>
                                                 <th>Note</th>
 
                                             </tr>
